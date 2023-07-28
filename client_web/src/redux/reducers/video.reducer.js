@@ -59,22 +59,14 @@ export function videos(state = initialState, action) {
         case videoConstants.VIEWVIDEO_REQUEST:
             return {
                 ...state,
-                item: null,
-                loadingSingle: true,
             };
         case videoConstants.VIEWVIDEO_SUCCESS:
             return {
                 ...state,
-                loadingSingle: false,
-                item: action.data,
             };
         case videoConstants.VIEWVIDEO_FAILURE:
             return {
-                error: action.error,
-                loading: false,
-                items: [],
-                item: null,
-                loadingSingle: false,
+                ...state,
             };
         //
         // COMPLETE
@@ -88,6 +80,21 @@ export function videos(state = initialState, action) {
                 ...state,
             };
         case videoConstants.COMPLETEVIDEO_FAILURE:
+            return {
+                ...state,
+            };
+        //
+        // TIME LENGTH
+        //
+        case videoConstants.SETVIDEOLENGTH_REQUEST:
+            return {
+                ...state,
+            };
+        case videoConstants.SETVIDEOLENGTH_SUCCESS:
+            return {
+                ...state,
+            };
+        case videoConstants.SETVIDEOLENGTH_FAILURE:
             return {
                 ...state,
             };

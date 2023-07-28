@@ -3,17 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactPlayer from "react-player";
 import DetailPill from "./DetailPill";
 import { videoActions } from "../redux/actions/video.actions";
+import { useAuth } from "../hooks/useAuth";
 import empty from "../assets/images/empty-folder.png";
 
 function Video({ videoURI, activeId }) {
     const course = useSelector((state) => state.courses.item);
-    const userId = useSelector((state) => state.authentication.id);
+    const { id: userId } = useAuth();
     const dispatch = useDispatch();
     const fetchedViewRef = useRef(false);
     const fetchedCompleteRef = useRef(false);
 
     const handleDuration = (time) => {
-        console.log(time);
+        const video = course?.videos?.find((video) => video._id === activeId);
+        if (video?.timeLength < 0)
+            dispatch(
+                videoActions.setVideoLength(activeId, time, video?.courseId)
+            );
     };
     const handleProgress = (time) => {
         handleViews(time);
@@ -37,7 +42,6 @@ function Video({ videoURI, activeId }) {
         // dispatch completed action once at .80 played
         if (fetchedCompleteRef.current) return;
         if (time.played > 0.8) {
-            console.log("COmpleted");
             dispatch(videoActions.completeVideo(activeId, userId));
             fetchedCompleteRef.current = true;
         }

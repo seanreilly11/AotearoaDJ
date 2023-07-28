@@ -103,6 +103,38 @@ exports.viewVideo = async (req, res, next) => {
     }
 };
 
+// @desc set time length of video
+// @route PATCH /api/v1/videos/timelength?videoId=:videoId&timeLength=:timeLength
+exports.setVideoLength = async (req, res, next) => {
+    try {
+        const { videoId, timeLength } = req.query;
+        const videoCheck = await Video.findById(videoId);
+
+        if (!videoCheck)
+            return res.status(404).json({
+                error: "Video not found",
+            });
+        else {
+            const video = await Video.updateOne(
+                {
+                    _id: videoId,
+                },
+                {
+                    $currentDate: {
+                        updatedDate: true,
+                    },
+                    timeLength: parseFloat(timeLength),
+                }
+            );
+            return res.status(200).json(true);
+        }
+    } catch (err) {
+        return res.status(500).json({
+            error: err.message,
+        });
+    }
+};
+
 // @desc add video id to users videos completed
 // @route PATCH /api/v1/videos/complete?videoId=:videoId&userId=:userId
 exports.completeVideo = async (req, res, next) => {

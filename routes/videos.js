@@ -10,11 +10,14 @@ const {
     removeVideo,
     updateVideo,
     completeVideo,
+    setVideoLength,
 } = require("../controllers/videos");
 
 router.route("/").get(getVideos).post(addVideo);
 
 router.route("/complete").patch(completeVideo);
+
+router.route("/timelength").patch(setVideoLength);
 
 router.route("/:id").get(getVideoByID).patch(updateVideo);
 

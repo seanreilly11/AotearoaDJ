@@ -6,6 +6,7 @@ export const videoService = {
     getSingle,
     viewVideo,
     completeVideo,
+    setVideoLength,
 };
 
 function handleResponse(response) {
@@ -65,6 +66,18 @@ async function completeVideo(videoId, userId) {
 
     return fetch(
         `${config.env}/videos/complete?videoId=${videoId}&userId=${userId}`,
+        requestOptions
+    ).then(handleResponse);
+}
+
+async function setVideoLength(videoId, timeLength) {
+    const requestOptions = {
+        method: "PATCH",
+        headers: authHeader(),
+    };
+
+    return fetch(
+        `${config.env}/videos/timelength?videoId=${videoId}&timeLength=${timeLength}`,
         requestOptions
     ).then(handleResponse);
 }

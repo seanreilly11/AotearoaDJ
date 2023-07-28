@@ -10,7 +10,10 @@ const videoSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    timeLength: Number,
+    timeLength: {
+        type: Number,
+        default: -1.0,
+    },
     videoURI: {
         type: String,
         required: true,

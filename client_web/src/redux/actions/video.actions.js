@@ -1,5 +1,6 @@
 import { videoConstants } from "../constants/video.constants";
 import { videoService } from "../services/video.services";
+import { courseActions } from "./course.actions";
 import { userActions } from "./user.actions";
 
 export const videoActions = {
@@ -7,6 +8,7 @@ export const videoActions = {
     getSingle,
     viewVideo,
     completeVideo,
+    setVideoLength,
 };
 
 function getAll() {
@@ -101,5 +103,31 @@ function completeVideo(videoId, userId) {
     }
     function failure(error) {
         return { type: videoConstants.COMPLETEVIDEO_FAILURE, error };
+    }
+}
+
+function setVideoLength(videoId, timeLength, courseId) {
+    return (dispatch) => {
+        dispatch(request());
+
+        videoService.setVideoLength(videoId, timeLength).then(
+            (data) => {
+                dispatch(success(data));
+                // dispatch(courseActions.getSingle(courseId));
+            },
+            (error) => {
+                dispatch(failure(error));
+            }
+        );
+    };
+
+    function request() {
+        return { type: videoConstants.SETVIDEOLENGTH_REQUEST };
+    }
+    function success(data) {
+        return { type: videoConstants.SETVIDEOLENGTH_SUCCESS, data };
+    }
+    function failure(error) {
+        return { type: videoConstants.SETVIDEOLENGTH_FAILURE, error };
     }
 }
