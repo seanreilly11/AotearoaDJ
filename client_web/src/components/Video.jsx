@@ -5,6 +5,13 @@ import DetailPill from "./DetailPill";
 import { videoActions } from "../redux/actions/video.actions";
 import { useAuth } from "../hooks/useAuth";
 import empty from "../assets/images/empty-folder.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faUserGraduate,
+    faUsers,
+    faUserGroup,
+    faVideo,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Video({ videoURI, activeId }) {
     const course = useSelector((state) => state.courses.item);
@@ -20,6 +27,7 @@ function Video({ videoURI, activeId }) {
                 videoActions.setVideoLength(activeId, time, video?.courseId)
             );
     };
+
     const handleProgress = (time) => {
         handleViews(time);
         handleComplete(time);
@@ -61,7 +69,7 @@ function Video({ videoURI, activeId }) {
                     height={"100%"}
                     controls
                     playing
-                    onDuration={handleDuration}
+                    // onDuration={handleDuration}
                     onProgress={handleProgress}
                 />
             ) : (
@@ -75,13 +83,29 @@ function Video({ videoURI, activeId }) {
                     <div className="row">
                         <div className="col-xl-5">
                             <h2>{course.title}</h2>
-                            <DetailPill content={course.difficulty} />
-                            <span className="me-3"></span>
                             <DetailPill content={course.category} />
-                            <p>
-                                Students:{" "}
-                                <strong>{course.totalStudents}</strong>
-                            </p>
+                            <span className="me-3"></span>
+                            <DetailPill content={course.difficulty} />
+                            <div className="row align-items-center">
+                                <div className="col-2">
+                                    <h6 className="mt-2">
+                                        <FontAwesomeIcon
+                                            icon={faUserGraduate}
+                                            style={{ marginRight: "2px" }}
+                                        />{" "}
+                                        {course.totalStudents}
+                                    </h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6 className="mt-2">
+                                        <FontAwesomeIcon
+                                            icon={faVideo}
+                                            style={{ marginRight: "2px" }}
+                                        />{" "}
+                                        {course.videos.length}
+                                    </h6>
+                                </div>
+                            </div>
                         </div>
                         <div className="col-xl-6">
                             <p style={{ whiteSpace: "pre-wrap" }}>

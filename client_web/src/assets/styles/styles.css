@@ -1,47 +1,96 @@
 /* #c120ca rgb(193,32,202) purple */
+/* #a41cac hover purple */
 /* #e56b4e rgb(229,107,78) orange */
 
-.hero{
-    padding: 7rem 0;
-    background: #6184D8;
+.btn-primary {
+    background-color: #c120ca;
+    border-color: #c120ca;
+}
+.btn-primary:hover {
+    background-color: #a41cac;
+    border-color: #a41cac;
+}
+.btn-primary:active {
+    background-color: #a41cac !important;
+    border-color: #a41cac !important;
 }
 
-.hero.background-image-dj{
+.btn-outline-primary {
+    color: #c120ca;
+    border-color: #c120ca;
+}
+
+.btn-outline-primary:hover {
+    background-color: #c120ca;
+    border-color: #c120ca;
+}
+
+.home-cover {
+    height: 100vh;
+    background-image: url("../images/dj_decks.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+
+.home-cover--text {
+    margin-top: 20vh;
+}
+
+.login-cover {
+    background-color: url("../images/dj_decks.jpg");
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+}
+
+.hero {
+    padding: 7rem 0;
+    background: #6184d8;
+}
+
+.hero.background-image-dj {
     background-image: url("../images/dj-cover.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 62%;
-    box-shadow: inset 0 0 0 1000px rgba(0,0,0,.3);
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.3);
 }
 
-.sidebar{
-    background-image: linear-gradient(rgba(255,255,255,1),rgba(255,255,255,1), rgba(255,255,255,.7),rgba(0,0,0,.1));
+.sidebar {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 1),
+        rgba(255, 255, 255, 1),
+        rgba(255, 255, 255, 0.7),
+        rgba(0, 0, 0, 0.1)
+    );
 }
 
-.nav-pills .nav-link.active{
+.nav-pills .nav-link.active {
     background-color: #c120ca;
 }
 
-.nav-link{
+.nav-link {
     color: #c120ca;
 }
 
-.video-list-fixed{
+.video-list-fixed {
     position: fixed;
     height: 100%;
-    top:0;
+    top: 0;
     right: 0;
     width: 350px;
     background-color: #fff;
 }
 
-.video-list-items{
+.video-list-items {
     overflow: auto;
     position: fixed;
     height: 92%;
 }
 
-.list-group-item.active{
-    background-color: rgba(193,32,202,.5);
-    border-color: rgba(193,32,202,0);
+.list-group-item.active {
+    background-color: rgba(193, 32, 202, 0.5);
+    border-color: rgba(193, 32, 202, 0);
 }

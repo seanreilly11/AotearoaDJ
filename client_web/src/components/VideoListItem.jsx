@@ -64,6 +64,7 @@ function VideoListItem({ video, setVideoURI, activeId, setActiveId }) {
                     {completed?.includes(video._id) && (
                         <FontAwesomeIcon
                             icon={faCircleCheck}
+                            title="Completed"
                             style={{ marginLeft: "1rem", color: "green" }}
                         />
                     )}
