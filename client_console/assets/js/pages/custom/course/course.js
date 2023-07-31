@@ -45,10 +45,17 @@ $(document).ready(function () {
                                 ${data[i].title}
                                 </a>
                                 <span class="kt-widget2__username">
-                                    ${data[i].views} views
+                                    ${data[i].views} views 
                                 </span>
                             </div>
                             <div class="kt-widget2__actions">
+                            ${
+                                data[i].timeLength <= 0
+                                    ? '<span class="btn btn-bold btn-sm btn-font-sm btn-label-danger mr-2">' +
+                                      "Time length not defined" +
+                                      "</span>"
+                                    : ""
+                            }
                             <span class="btn btn-bold btn-sm btn-font-sm ${
                                 status[data[i].status].class
                             }">${status[data[i].status].title}</span>

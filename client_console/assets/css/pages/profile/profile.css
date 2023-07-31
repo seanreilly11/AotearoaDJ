@@ -857,7 +857,11 @@ a.nav-row-added::after {
 }
 
 .kt-widget14 .kt-widget14__header .kt-widget14__title,
-.kt-widget21 .kt-widget21__content .kt-widget21__item .kt-widget21__info .kt-widget21__title {
+.kt-widget21
+    .kt-widget21__content
+    .kt-widget21__item
+    .kt-widget21__info
+    .kt-widget21__title {
     font-weight: 600;
     font-size: 1.3rem;
     color: #48465b;

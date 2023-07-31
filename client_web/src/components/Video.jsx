@@ -51,6 +51,11 @@ function Video({ videoURI, activeId }) {
         <div className="mb-5" style={{ marginRight: "350px" }}>
             {videoURI ? (
                 <ReactPlayer
+                    config={{
+                        file: { attributes: { controlsList: "nodownload" } },
+                    }}
+                    // Disable right click
+                    onContextMenu={(e) => e.preventDefault()}
                     url={videoURI}
                     width={"100%"}
                     height={"100%"}

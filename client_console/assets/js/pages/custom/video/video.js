@@ -6,9 +6,6 @@ $(document).ready(function () {
     const token = urlParams.get("token");
     let courseId = "";
 
-    const backupVideo =
-        "https://cdn.videvo.net/videvo_files/video/premium/video0233/large_watermarked/03_oduvan_agro_hand_37_hands_preview.mp4";
-
     $.ajax({
         url: `${environment}/videos/${videoId}`,
         type: "GET",
@@ -18,6 +15,9 @@ $(document).ready(function () {
             document.title += " | " + data.title;
             $("#videopage_title").text(data.title);
             $("#videopage_views").text(data.views);
+            $("#videopage_timelength").text(
+                data.timeLength > 0 ? data.timeLength : "NOT DEFINED"
+            );
             $("#videopage_difficulty").text(difficulty[data.difficulty].title);
             $("#videopage_status").text(status[data.status].title);
             $("#videopage_status").addClass(status[data.status].class);
@@ -31,10 +31,11 @@ $(document).ready(function () {
             var video = document.getElementById("videopage_video");
             var source = document.createElement("source");
 
-            source.src = data.videoURI || backupVideo;
+            source.src = data.videoURI;
             source.type = "video/mp4";
 
             video.prepend(source);
+            getVideoLength(data.timeLength);
 
             initTokenSecurity();
         }, //success
@@ -42,6 +43,30 @@ $(document).ready(function () {
             console.log("error: cannot call api");
         }, //error
     }); //ajax
+
+    const getVideoLength = (timeLength) => {
+        var video = document.getElementById("videopage_video");
+        if (timeLength <= 0) {
+            video.ondurationchange = (e) => {
+                const time = video.duration;
+                $.ajax({
+                    url: `${environment}/videos/timelength?videoId=${videoId}&timeLength=${time}`,
+                    headers: {
+                        Accept: "/*/",
+                        "Content-Type": "application/json",
+                    },
+                    type: "PATCH",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#videopage_timelength").text(video.duration);
+                    }, //success
+                    error: function (xhr, status, error) {
+                        console.log("error: cannot call api");
+                    }, //error
+                }); //ajax
+            };
+        }
+    };
 
     $("#videopage_deletevideo").click(function () {
         Swal.fire({
@@ -72,7 +97,8 @@ $(document).ready(function () {
                             timer: 2500,
                         }).then(() =>
                             window.location.replace(
-                                `custom/course/overview.html?courseId=${courseId}&token=` + token
+                                `custom/course/overview.html?courseId=${courseId}&token=` +
+                                    token
                             )
                         );
                     }, //success
