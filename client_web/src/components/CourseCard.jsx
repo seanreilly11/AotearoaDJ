@@ -16,13 +16,13 @@ function CourseCard({ course }) {
                 to={"/course/" + course._id}
                 className={"text-decoration-none"}
             >
-                <div className="card">
+                <div className="card course-card">
+                    {/* <img src="" alt="" /> */}
+                    <div className="my-5"></div>
                     <div className="card-body">
-                        <h4 className="card-title">{course.title}</h4>
-                        <div className="row align-items-center">
-                            {/* <div className="col-4">
-                                <DetailPill content={course.difficulty} />
-                            </div> */}
+                        <h4 className="card-title mb-1">{course.title}</h4>
+                        <DetailPill content={course.difficulty} />
+                        <div className="row align-items-center mt-2">
                             <div className="col-4">
                                 <h6 className="mt-2">
                                     <FontAwesomeIcon

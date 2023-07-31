@@ -40,9 +40,12 @@
 }
 
 .login-cover {
-    background-color: url("../images/dj_decks.jpg");
+    height: 100vh;
+    background-image: url("../images/dj_decks.jpg");
     background-repeat: no-repeat;
-    background-size: 50% 100%;
+    background-size: contain;
+    /* background-size: 50% 100%; */
+    background-position: 150% 0;
 }
 
 .hero {
@@ -73,6 +76,15 @@
 
 .nav-link {
     color: #c120ca;
+}
+
+.course-card {
+    background: rgb(193, 32, 202);
+    background: linear-gradient(
+        160deg,
+        rgba(193, 32, 202, 1) 0%,
+        rgba(227, 110, 233, 1) 100%
+    );
 }
 
 .video-list-fixed {
