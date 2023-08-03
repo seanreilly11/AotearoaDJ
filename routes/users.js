@@ -7,6 +7,7 @@ const {
     makeUserAdmin,
     updateUser,
     loginUser,
+    logoutUser,
     loginAdminUser,
     getUsersCompletedItems,
 } = require("../controllers/users");
@@ -14,6 +15,8 @@ const {
 router.route("/").get(getUsers).post(registerUser);
 
 router.route("/login").post(loginUser);
+
+router.route("/logout").patch(logoutUser);
 
 router.route("/adminlogin").post(loginAdminUser);
 

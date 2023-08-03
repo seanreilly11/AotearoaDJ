@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
 import Sidebar from "./components/Sidebar";
 import Home from "./pages/private/Home";
@@ -8,13 +8,18 @@ import PrivateRoute from "./components/PrivateRoute";
 import PublicHome from "./pages/public/PublicHome";
 import Login from "./pages/public/Login";
 import { useAuth } from "./hooks/useAuth";
+import { history } from "./hooks/useHistory";
 import Footer from "./components/Footer";
+import Register from "./pages/public/Register";
 
 function App() {
     const location = useLocation();
+    history.navigate = useNavigate();
+    history.location = useLocation();
+
     const auth = () => {
         const url = location.pathname;
-        return url !== "/login" && url !== "/";
+        return url !== "/login" && url !== "/register" && url !== "/";
     };
 
     return (
@@ -42,6 +47,7 @@ function App() {
                         }
                     />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>

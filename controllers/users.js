@@ -56,9 +56,39 @@ exports.loginUser = async (req, res, next) => {
                 // return res.status(200).json({ ...userWithToken._doc, password: undefined });
             } else {
                 return res.status(401).json({
-                    error: "Not authorised. Incorrect password",
+                    error: "Incorrect password",
                 });
             }
+        } else {
+            return res.status(404).json({
+                error: "Email is not valid",
+            });
+        }
+    } catch (err) {
+        return res.status(500).json({
+            error: err.message,
+        });
+    }
+};
+
+// @desc logout user
+// @route POST /api/v1/users/logout
+exports.logoutUser = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ _id: req.body.userId });
+        if (user) {
+            const updateUser = await User.updateOne(
+                {
+                    _id: user._id,
+                },
+                {
+                    $currentDate: {
+                        updatedDate: true,
+                    },
+                    $set: { securityKey: "" },
+                }
+            );
+            return res.status(200).json(true);
         } else {
             return res.status(404).json({
                 error: "User not found",
@@ -98,11 +128,11 @@ exports.loginAdminUser = async (req, res, next) => {
                     });
                 } else
                     return res.status(403).json({
-                        error: "Not authorised. Not admin",
+                        error: "Unauthorised. Not admin",
                     });
             } else
                 return res.status(401).json({
-                    error: "Not authorised. Incorrect password",
+                    error: "Incorrect password",
                 });
         } else
             return res.status(404).json({
@@ -124,7 +154,7 @@ exports.registerUser = async (req, res, next) => {
             if (err) return res.status(500).json({ error: err.message });
             else if (result) {
                 return res.status(409).json({
-                    error: "Email is taken",
+                    error: "Email is already in use",
                 });
             } else {
                 const hash = bcryptjs.hashSync(password);
@@ -236,12 +266,10 @@ exports.getUsersCompletedItems = async (req, res, next) => {
                 error: "No user found",
             });
 
-        return res
-            .status(200)
-            .json({
-                courses: user.coursesCompleted,
-                videos: user.videosCompleted,
-            });
+        return res.status(200).json({
+            courses: user.coursesCompleted,
+            videos: user.videosCompleted,
+        });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

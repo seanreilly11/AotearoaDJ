@@ -4,8 +4,7 @@ const initialState = {
     token: null,
     id: null,
     error: null,
-    isLoading: false,
-    loggingIn: false,
+    loading: false,
 };
 
 export function authentication(state = initialState, action) {
@@ -13,12 +12,12 @@ export function authentication(state = initialState, action) {
         case authenticationConstants.SIGN_IN_REQUEST:
             return {
                 ...state,
-                loggingIn: true,
+                loading: true,
             };
         case authenticationConstants.SIGN_IN_SUCCESS:
             return {
                 ...state,
-                loggingIn: false,
+                loading: false,
                 id: action.data.id,
                 token: action.data.token,
             };
@@ -27,8 +26,7 @@ export function authentication(state = initialState, action) {
                 error: action.error,
                 token: null,
                 id: null,
-                isLoading: false,
-                loggingIn: false,
+                loading: false,
             };
 
         case authenticationConstants.SIGN_OUT_REQUEST:
@@ -46,48 +44,45 @@ export function authentication(state = initialState, action) {
                 error: action.error,
                 token: null,
                 id: null,
-                isLoading: false,
-                loggingIn: false,
+                loading: false,
             };
 
         case authenticationConstants.RESTORE_TOKEN_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                loading: true,
             };
         case authenticationConstants.RESTORE_TOKEN_SUCCESS:
             return {
                 ...state,
                 id: action.data.id,
                 token: action.data.token,
-                isLoading: false,
+                loading: false,
             };
         case authenticationConstants.RESTORE_TOKEN_FAILURE:
             return {
                 error: action.error,
                 token: null,
                 id: null,
-                isLoading: false,
-                loggingIn: false,
+                loading: false,
             };
 
         case authenticationConstants.REGISTER_REQUEST:
             return {
                 ...state,
-                isLoading: true,
+                loading: true,
             };
         case authenticationConstants.REGISTER_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
+                loading: false,
             };
         case authenticationConstants.REGISTER_FAILURE:
             return {
                 error: action.error,
                 token: null,
                 id: null,
-                isLoading: false,
-                loggingIn: false,
+                loading: false,
             };
         default:
             return state;

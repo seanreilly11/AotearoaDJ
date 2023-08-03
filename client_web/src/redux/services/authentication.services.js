@@ -40,15 +40,17 @@ async function signIn(email, password) {
     );
 }
 
-async function signOut() {
-    return localStorage.clear("user");
-    // AsyncStorage.multiRemove([STORAGE_TOKEN, STORAGE_UID])
-    // 	.then(() => {
-    // 		return;
-    // 	})
-    // 	.catch(error => {
-    // 		return Promise.reject(error);
-    // 	});
+async function signOut(userId) {
+    const requestOptions = {
+        method: "PATCH",
+        headers: unauthenticatedHeader(),
+        dataType: "json",
+        body: JSON.stringify(userId),
+    };
+
+    return fetch(`${config.env}/users/logout`, requestOptions).then(
+        handleResponse
+    );
 }
 
 async function restoreToken() {

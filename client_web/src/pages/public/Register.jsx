@@ -2,11 +2,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { authenticationActions } from "../../redux/actions/authentication.actions";
-import { NavLink } from "react-router-dom";
 import logo from "../../assets/images/aotearoa_dj_logo_icon_nobg.png";
+import { NavLink } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 
-function Login() {
+function Register() {
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.authentication.loading);
     const error = useSelector((state) => state.authentication.error);
@@ -15,8 +15,8 @@ function Login() {
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const onSubmit = ({ email, password }) =>
-        dispatch(authenticationActions.signIn(email, password));
+    const onSubmit = (passport) =>
+        dispatch(authenticationActions.register(passport));
 
     return (
         <div className="login-cover p-3">
@@ -39,18 +39,48 @@ function Login() {
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className="mb-2">
+                        <label htmlFor="firstname" className="form-label">
+                            First Name
+                        </label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            {...register("firstname", { required: true })}
+                        />
+                        {errors.firstname && (
+                            <span className="invalid-feedback">
+                                This field is required
+                            </span>
+                        )}
+                    </div>
+                    <div className="mb-2">
+                        <label htmlFor="lastname" className="form-label">
+                            Last Name
+                        </label>
+                        <input
+                            className="form-control"
+                            type="text"
+                            {...register("lastname", { required: true })}
+                        />
+                        {errors.lastname && (
+                            <span className="invalid-feedback">
+                                This field is required
+                            </span>
+                        )}
+                    </div>
+                    <div className="mb-2">
                         <label htmlFor="email" className="form-label">
                             Email
                         </label>
                         <input
                             className={
                                 "form-control" +
-                                (error.status === 404 ? " is-invalid" : "")
+                                (error.status === 409 ? " is-invalid" : "")
                             }
                             type="email"
                             {...register("email", { required: true })}
                         />
-                        {error.status === 404 && (
+                        {error.status === 409 && (
                             <span className="invalid-feedback">
                                 {error.message}
                             </span>
@@ -64,30 +94,22 @@ function Login() {
                     <div className="mb-2">
                         <label htmlFor="password">Password</label>
                         <input
-                            className={
-                                "form-control" +
-                                (error.status === 401 ? " is-invalid" : "")
-                            }
+                            className="form-control"
                             type="password"
                             {...register("password", { required: true })}
                         />
-                        {error.status === 401 && (
-                            <span className="invalid-feedback">
-                                {error.message}
-                            </span>
-                        )}
                         {errors.password && (
                             <span className="invalid-feedback">
                                 This field is required
                             </span>
                         )}
                     </div>
-                    <div className="mt-3 d-flex align-items-center">
+                    <div className="mt-3">
                         <button type="submit" className="btn btn-primary">
-                            Login
-                        </button>
-                        <NavLink to="/register" className="btn btn-link">
                             Register
+                        </button>
+                        <NavLink to="/login" className={"btn btn-link"}>
+                            Already have an account?
                         </NavLink>
                         {loading && <Spinner />}
                     </div>
@@ -97,4 +119,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Register;

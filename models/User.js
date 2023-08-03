@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
+    favourites: {
+        type: [String],
+        default: [],
+    },
     school: {
         type: String,
         default: "",

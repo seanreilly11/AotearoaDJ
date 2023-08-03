@@ -1,6 +1,7 @@
 import { authenticationConstants } from "../constants/authentication.constants";
 import { authenticationService } from "../services/authentication.services";
 import { userActions } from "./user.actions";
+import { history } from "../../hooks/useHistory";
 
 export const authenticationActions = {
     signIn,
@@ -17,6 +18,7 @@ function signIn(username, password) {
             (data) => {
                 dispatch(success(data));
                 localStorage.setItem("user", JSON.stringify(data));
+                history.navigate("/home");
                 dispatch(userActions.getCompletedItems(data.id));
             },
             (error) => {
@@ -36,12 +38,15 @@ function signIn(username, password) {
     }
 }
 
-function signOut() {
+function signOut(userId) {
     return (dispatch) => {
         dispatch(request());
 
-        authenticationService.signOut().then(
-            (data) => dispatch(success(data)),
+        authenticationService.signOut(userId).then(
+            (data) => {
+                dispatch(success(data));
+                localStorage.clear("user");
+            },
             (error) => {
                 dispatch(failure(error));
             }

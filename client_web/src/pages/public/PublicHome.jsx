@@ -11,7 +11,7 @@ function PublicHome() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        auth && dispatch(authenticationActions.signOut());
+        auth && dispatch(authenticationActions.signOut(auth.id));
     }, []);
 
     return (
