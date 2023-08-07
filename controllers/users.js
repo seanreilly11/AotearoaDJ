@@ -1,5 +1,6 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../models/User");
+const nodemailer = require("nodemailer");
 
 // @desc Get all users
 // @route GET /api/v1/users
@@ -145,11 +146,47 @@ exports.loginAdminUser = async (req, res, next) => {
     }
 };
 
+// @desc Send email
+// @route POST /api/v1/users/email
+exports.sendEmail = async (req, res, next) => {
+    try {
+        console.log(req);
+        // TODO: add jwt. It's a must
+        var transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+                user: "seanreilly52@gmail.com",
+                pass: "xgywkihemptapjyj",
+            },
+        });
+
+        // Define the email
+        var mailOptions = {
+            from: "seanreilly52@gmail.com",
+            to: "seanreilly123@hotmail.com", // TODO: add result email
+            subject: "Welcome to Aotearoa DJ Academy",
+            html: `<h1>Hello ${req}</h1>`,
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                res.send(500, err.message);
+            } else {
+                res.status(200).json(true);
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+};
+
 // @desc Add new user
 // @route POST /api/v1/users
 exports.registerUser = async (req, res, next) => {
     try {
         const { firstname, lastname, email, password } = req.body;
+        this.sendEmail({ firstname });
         User.findOne({ email }, (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
             else if (result) {
@@ -166,6 +203,7 @@ exports.registerUser = async (req, res, next) => {
                 });
                 user.save()
                     .then((result) => {
+                        this.sendEmail({ result });
                         return res.status(201).json(result);
                     })
                     .catch((err) => {
