@@ -1,11 +1,15 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../models/User");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+const { JWT_TOKEN } = require("../config/keys");
+const auth = require("../middlewares/auth");
 
 // @desc Get all users
 // @route GET /api/v1/users
-exports.getUsers = async (req, res, next) => {
+exports.getUsers = async (req, res) => {
     try {
+        console.log(req.user);
         const users = await User.find().sort({ lastLogin: -1 });
         return res.status(200).json(users);
     } catch (err) {
@@ -15,14 +19,10 @@ exports.getUsers = async (req, res, next) => {
 
 // @desc Get user by ID
 // @route GET /api/v1/users/:id
-exports.getUserByID = async (req, res, next) => {
+exports.getUserByID = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-
-        if (!user)
-            return res.status(404).json({
-                error: "No user found",
-            });
+        if (!user) return res.status(404).json({ error: "No user found" });
 
         return res.status(200).json(user);
     } catch (err) {
@@ -35,34 +35,30 @@ exports.getUserByID = async (req, res, next) => {
 exports.loginUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email });
-        if (user) {
-            if (bcryptjs.compareSync(req.body.password, user.password)) {
-                const updateUser = await User.updateOne(
-                    {
-                        _id: user._id,
+        if (!user) return res.status(404).json({ error: "Email is not valid" });
+
+        if (bcryptjs.compareSync(req.body.password, user.password)) {
+            const updateUser = await User.updateOne(
+                {
+                    _id: user._id,
+                },
+                {
+                    $currentDate: {
+                        updatedDate: true,
+                        lastLogin: true,
                     },
-                    {
-                        $currentDate: {
-                            updatedDate: true,
-                            lastLogin: true,
-                        },
-                        $set: { securityKey: generateSecurityKey(false) },
-                    }
-                );
-                const userWithToken = await User.findById(user._id);
-                return res.status(200).json({
-                    id: userWithToken._id,
-                    token: userWithToken.securityKey,
-                });
-                // return res.status(200).json({ ...userWithToken._doc, password: undefined });
-            } else {
-                return res.status(401).json({
-                    error: "Incorrect password",
-                });
-            }
+                    $set: { securityKey: generateSecurityKey(user) },
+                }
+            );
+            const userWithToken = await User.findById(user._id);
+            return res.status(200).json({
+                id: userWithToken._id,
+                token: userWithToken.securityKey,
+            });
+            // return res.status(200).json({ ...userWithToken._doc, password: undefined });
         } else {
-            return res.status(404).json({
-                error: "Email is not valid",
+            return res.status(401).json({
+                error: "Incorrect password",
             });
         }
     } catch (err) {
@@ -77,24 +73,20 @@ exports.loginUser = async (req, res, next) => {
 exports.logoutUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ _id: req.body.userId });
-        if (user) {
-            const updateUser = await User.updateOne(
-                {
-                    _id: user._id,
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const updateUser = await User.updateOne(
+            {
+                _id: user._id,
+            },
+            {
+                $currentDate: {
+                    updatedDate: true,
                 },
-                {
-                    $currentDate: {
-                        updatedDate: true,
-                    },
-                    $set: { securityKey: "" },
-                }
-            );
-            return res.status(200).json(true);
-        } else {
-            return res.status(404).json({
-                error: "User not found",
-            });
-        }
+                $set: { securityKey: "" },
+            }
+        );
+        return res.status(200).json(true);
     } catch (err) {
         return res.status(500).json({
             error: err.message,
@@ -107,37 +99,34 @@ exports.logoutUser = async (req, res, next) => {
 exports.loginAdminUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email });
-        if (user) {
-            if (bcryptjs.compareSync(req.body.password, user.password)) {
-                if (user.admin) {
-                    const securityKey = generateSecurityKey(true);
-                    const updateUser = await User.updateOne(
-                        {
-                            _id: user._id,
-                        },
-                        {
-                            $currentDate: {
-                                updatedDate: true,
-                            },
-                            $set: { securityKey },
-                        }
-                    );
-                    return res.status(200).json({
-                        uid: user._id,
-                        token: securityKey,
-                        firstname: user.firstname,
-                    });
-                } else
-                    return res.status(403).json({
-                        error: "Unauthorised. Not admin",
-                    });
-            } else
-                return res.status(401).json({
-                    error: "Incorrect password",
-                });
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        if (bcryptjs.compareSync(req.body.password, user.password)) {
+            if (!user.admin)
+                return res
+                    .status(403)
+                    .json({ error: "Unauthorised. Not admin" });
+
+            const securityKey = generateSecurityKey(user);
+            const updateUser = await User.updateOne(
+                {
+                    _id: user._id,
+                },
+                {
+                    $currentDate: {
+                        updatedDate: true,
+                    },
+                    $set: { securityKey },
+                }
+            );
+            return res.status(200).json({
+                uid: user._id,
+                token: securityKey,
+                firstname: user.firstname,
+            });
         } else
-            return res.status(404).json({
-                error: "User not found",
+            return res.status(401).json({
+                error: "Incorrect password",
             });
     } catch (err) {
         return res.status(500).json({
@@ -162,7 +151,7 @@ exports.sendEmail = async (req, res, next) => {
 
         // Define the email
         var mailOptions = {
-            from: "seanreilly52@gmail.com",
+            from: "Aotearoa DJ Academy",
             to: "seanreilly123@hotmail.com", // TODO: add result email
             subject: "Welcome to Aotearoa DJ Academy",
             html: `<h1>Hello ${req}</h1>`,
@@ -186,32 +175,31 @@ exports.sendEmail = async (req, res, next) => {
 exports.registerUser = async (req, res, next) => {
     try {
         const { firstname, lastname, email, password } = req.body;
-        this.sendEmail({ firstname });
+        // this.sendEmail({ firstname });
         User.findOne({ email }, (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
-            else if (result) {
-                return res.status(409).json({
-                    error: "Email is already in use",
-                });
-            } else {
-                const hash = bcryptjs.hashSync(password);
-                const user = new User({
-                    firstname,
-                    lastname,
-                    email,
-                    password: hash,
-                });
-                user.save()
-                    .then((result) => {
-                        this.sendEmail({ result });
-                        return res.status(201).json(result);
-                    })
-                    .catch((err) => {
-                        return res.status(500).json({
-                            error: err.message,
-                        });
+            if (result)
+                return res
+                    .status(409)
+                    .json({ error: "Email is already in use" });
+
+            const hash = bcryptjs.hashSync(password);
+            const user = new User({
+                firstname,
+                lastname,
+                email,
+                password: hash,
+            });
+            user.save()
+                .then((result) => {
+                    this.sendEmail({ result });
+                    return res.status(201).json(result);
+                })
+                .catch((err) => {
+                    return res.status(500).json({
+                        error: err.message,
                     });
-            }
+                });
         });
     } catch (err) {
         if (err.name === "ValidationError") {
@@ -235,25 +223,21 @@ exports.makeUserAdmin = async (req, res, next) => {
     try {
         const { userId } = req.body;
         const userCheck = await User.findById(userId);
-
         if (!userCheck)
-            return res.status(404).json({
-                error: "User not found",
-            });
-        else {
-            const user = await User.updateOne(
-                {
-                    _id: userId,
+            return res.status(404).json({ error: "User not found" });
+
+        const user = await User.updateOne(
+            {
+                _id: userId,
+            },
+            {
+                $currentDate: {
+                    updatedDate: true,
                 },
-                {
-                    $currentDate: {
-                        updatedDate: true,
-                    },
-                    $set: { admin: true },
-                }
-            );
-            return res.status(200).json(user);
-        }
+                $set: { admin: true },
+            }
+        );
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(500).json({
             error: err.message,
@@ -267,25 +251,21 @@ exports.updateUser = async (req, res, next) => {
     try {
         const { id } = req.params;
         const userCheck = await User.findById(id);
-
         if (!userCheck)
-            return res.status(404).json({
-                error: "User not found",
-            });
-        else {
-            const user = await User.updateOne(
-                {
-                    _id: id,
+            return res.status(404).json({ error: "User not found" });
+
+        const user = await User.updateOne(
+            {
+                _id: id,
+            },
+            {
+                $currentDate: {
+                    updatedDate: true,
                 },
-                {
-                    $currentDate: {
-                        updatedDate: true,
-                    },
-                    $set: req.body,
-                }
-            );
-            return res.status(200).json(user);
-        }
+                $set: req.body,
+            }
+        );
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(500).json({
             error: err.message,
@@ -298,11 +278,7 @@ exports.updateUser = async (req, res, next) => {
 exports.getUsersCompletedItems = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
-
-        if (!user)
-            return res.status(404).json({
-                error: "No user found",
-            });
+        if (!user) return res.status(404).json({ error: "No user found" });
 
         return res.status(200).json({
             courses: user.coursesCompleted,
@@ -313,13 +289,21 @@ exports.getUsersCompletedItems = async (req, res, next) => {
     }
 };
 
-function generateSecurityKey(isAdmin) {
-    var length = isAdmin ? 8 : 16,
-        charset =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        retVal = "";
-    for (var i = 0, n = charset.length; i < length; ++i)
-        retVal += charset.charAt(Math.floor(Math.random() * n));
+function generateSecurityKey(user) {
+    // var length = isAdmin ? 8 : 16,
+    //     charset =
+    //         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    //     retVal = "";
+    // for (var i = 0, n = charset.length; i < length; ++i)
+    //     retVal += charset.charAt(Math.floor(Math.random() * n));
+    const token = jwt.sign(
+        { user_id: user._id, email: user.email },
+        JWT_TOKEN,
+        {
+            expiresIn: "2h",
+        }
+    );
+    console.log(token);
 
-    return retVal;
+    return token;
 }

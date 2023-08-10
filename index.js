@@ -3,6 +3,7 @@ const cors = require("cors");
 const compression = require("compression");
 const helmet = require("helmet");
 const connectDB = require("./config/db");
+const verifyToken = require("./middlewares/auth");
 // const upload = require("./middlewares/multer");
 // const Video = require("./models/Video");
 // const Course = require("./models/Course");
@@ -32,6 +33,9 @@ app.use((req, res, next) => {
     console.log(`${req.method} request for ${req.url}`);
     next();
 });
+
+// verify jwt
+app.use(verifyToken);
 
 app.use("/api/v1/videos", videos);
 app.use("/api/v1/users", users);
