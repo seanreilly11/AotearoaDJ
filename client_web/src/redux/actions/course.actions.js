@@ -1,8 +1,5 @@
 import { courseConstants } from "../constants/course.constants";
 import { courseService } from "../services/course.services";
-import { userActions } from "./user.actions";
-// import { createBrowserHistory } from "history";
-// const history = createBrowserHistory();
 
 export const courseActions = {
     getAll,
@@ -16,7 +13,6 @@ function getAll() {
         courseService.getAll().then(
             (data) => {
                 dispatch(success(data));
-                // dispatch(userActions.getCompletedItems(data.id));
             },
             (error) => {
                 dispatch(failure(error));

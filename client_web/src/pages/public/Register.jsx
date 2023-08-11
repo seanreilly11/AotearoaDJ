@@ -75,12 +75,12 @@ function Register() {
                         <input
                             className={
                                 "form-control" +
-                                (error.status === 409 ? " is-invalid" : "")
+                                (error?.status === 409 ? " is-invalid" : "")
                             }
                             type="email"
                             {...register("email", { required: true })}
                         />
-                        {error.status === 409 && (
+                        {error?.status === 409 && (
                             <span className="invalid-feedback">
                                 {error.message}
                             </span>

@@ -1,8 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import logo from "../assets/images/aotearoa_dj_logo.png";
 
 function Sidebar() {
+    const username = useSelector((state) => state.authentication.name);
+
     return (
         <div
             className="d-flex flex-column flex-shrink-0 position-fixed p-3 text-bg-dark sidebar"
@@ -26,11 +29,11 @@ function Sidebar() {
                         Home
                     </NavLink>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                     <NavLink to="/course/1" className="nav-link">
                         Course
                     </NavLink>
-                </li>
+                </li> */}
                 <li className="nav-item">
                     <NavLink to="/" className="nav-link">
                         Log out
@@ -65,7 +68,7 @@ function Sidebar() {
                         height="32"
                         className="rounded-circle me-2"
                     />
-                    <strong>mdo</strong>
+                    <strong>{username || "User"}</strong>
                 </div>
             </div>
         </div>

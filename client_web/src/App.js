@@ -20,6 +20,7 @@ function App() {
     const user = useAuth();
     auth.id = user?.id;
     auth.token = user?.token;
+    auth.name = user?.firstname;
 
     const isAuth = () => {
         const url = location.pathname;

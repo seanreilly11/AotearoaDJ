@@ -53,6 +53,7 @@ exports.loginUser = async (req, res, next) => {
             const userWithToken = await User.findById(user._id);
             return res.status(200).json({
                 id: userWithToken._id,
+                firstname: userWithToken.firstname,
                 token: userWithToken.securityKey,
             });
             // return res.status(200).json({ ...userWithToken._doc, password: undefined });
@@ -139,8 +140,6 @@ exports.loginAdminUser = async (req, res, next) => {
 // @route POST /api/v1/users/email
 exports.sendEmail = async (req, res, next) => {
     try {
-        console.log(req);
-        // TODO: add jwt. It's a must
         var transporter = nodemailer.createTransport({
             service: "Gmail",
             auth: {
@@ -154,7 +153,7 @@ exports.sendEmail = async (req, res, next) => {
             from: "Aotearoa DJ Academy",
             to: "seanreilly123@hotmail.com", // TODO: add result email
             subject: "Welcome to Aotearoa DJ Academy",
-            html: `<h1>Hello ${req}</h1>`,
+            html: defineEmailHTML(req.result),
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -169,6 +168,52 @@ exports.sendEmail = async (req, res, next) => {
         return res.status(500).json({ error: err.message });
     }
 };
+
+function defineEmailHTML(data) {
+    console.log(data);
+    let html = `<div style="display: flex; justify-content: center">
+        <div
+            style="
+                width: 50%;
+                min-width: 500px;
+                background: #ccc;
+                text-align: center;
+                padding: 2rem;
+            "
+        >
+            <h1 style="margin-top: 0">Welcome to Aotearoa DJ Academy!</h1>
+            <h3>Hi ${data.firstname},</h3>
+            <p>Thanks for joining the Dojo.</p>
+            <p>
+                You're almost ready to start learning the ins and outs of
+                DJing and producing and start your journey to the big stage.
+            </p>
+            <p>
+                Please click on the button below to verify your email
+                address and get exclusive access to Dojo content.
+            </p>
+            <br />
+            <a
+                href="http://localhost:3000/"
+                style="
+                    background-color: #c120ca;
+                    color: #fff;
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 5px;
+                "
+                >Verify your email</a
+            >
+            <br />
+            <br />
+            <p>
+                Thanks, <br />
+                Aotearoa DJ Academy
+            </p>
+        </div>
+    </div>`;
+    return html;
+}
 
 // @desc Add new user
 // @route POST /api/v1/users

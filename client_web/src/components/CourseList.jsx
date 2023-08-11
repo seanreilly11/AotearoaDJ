@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { courseActions } from "../redux/actions/course.actions";
 import CourseCard from "./CourseCard";
+import Spinner from "./Spinner";
 
 function CourseList() {
     const dispatch = useDispatch();
@@ -17,23 +18,34 @@ function CourseList() {
     return (
         <div className="container-fluid">
             <div className="mx-3">
-                {/* <hr /> */}
                 <h2>DJ</h2>
+                <hr />
                 <div className="row gy-4 mb-5">
-                    {courses
-                        ?.filter((course) => course.category === "DJ")
-                        .map((course) => (
-                            <CourseCard key={course._id} course={course} />
-                        ))}
+                    {courses ? (
+                        courses
+                            ?.filter((course) => course.category === "DJ")
+                            .map((course) => (
+                                <CourseCard key={course._id} course={course} />
+                            ))
+                    ) : (
+                        <Spinner />
+                    )}
                 </div>
-                {/* <hr /> */}
+
                 <h2>Production</h2>
+                <hr />
                 <div className="row gy-4">
-                    {courses
-                        ?.filter((course) => course.category === "Production")
-                        .map((course) => (
-                            <CourseCard key={course._id} course={course} />
-                        ))}
+                    {courses ? (
+                        courses
+                            ?.filter(
+                                (course) => course.category === "Production"
+                            )
+                            .map((course) => (
+                                <CourseCard key={course._id} course={course} />
+                            ))
+                    ) : (
+                        <Spinner />
+                    )}
                 </div>
             </div>
         </div>

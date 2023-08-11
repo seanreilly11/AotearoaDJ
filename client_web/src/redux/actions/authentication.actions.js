@@ -19,7 +19,7 @@ function signIn(username, password) {
                 dispatch(success(data));
                 localStorage.setItem("user", JSON.stringify(data));
                 history.navigate("/home");
-                dispatch(userActions.getCompletedItems(data.id));
+                // dispatch(userActions.getCompletedItems(data.id));
             },
             (error) => {
                 dispatch(failure(error));

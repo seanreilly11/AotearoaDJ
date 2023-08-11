@@ -2,8 +2,9 @@ import { authenticationConstants } from "../constants/authentication.constants";
 import { auth } from "../../hooks/useAuthConst";
 
 const initialState = {
-    token: auth.token,
-    id: auth.id,
+    token: auth?.token,
+    id: auth?.id,
+    name: auth?.firstname,
     error: null,
     loading: false,
 };
@@ -20,6 +21,7 @@ export function authentication(state = initialState, action) {
                 ...state,
                 loading: false,
                 id: action.data.id,
+                name: action.data.firstname,
                 token: action.data.token,
             };
         case authenticationConstants.SIGN_IN_FAILURE:
