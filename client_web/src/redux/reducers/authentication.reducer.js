@@ -1,8 +1,9 @@
 import { authenticationConstants } from "../constants/authentication.constants";
+import { auth } from "../../hooks/useAuthConst";
 
 const initialState = {
-    token: null,
-    id: null,
+    token: auth.token,
+    id: auth.id,
     error: null,
     loading: false,
 };

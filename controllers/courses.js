@@ -6,10 +6,12 @@ const utils = require("./utils");
 // @route GET /api/courses
 exports.getCourses = async (req, res, next) => {
     try {
-        const authHeader = req.header("Authorization");
         const { accessLevel } = req.query;
         const filter = accessLevel == 1 ? {} : { status: utils.isActive() };
-        const courses = await Course.find(filter).sort({ status: 1, createdDate: 1 }); // active ones on top sorted by date
+        const courses = await Course.find(filter).sort({
+            status: 1,
+            createdDate: 1,
+        }); // active ones on top sorted by date
 
         return res.status(200).json(courses);
     } catch (err) {
@@ -24,10 +26,15 @@ exports.getCourseByID = async (req, res, next) => {
         const { id } = req.params;
         const { accessLevel } = req.query;
         const filter =
-            accessLevel == 1 ? { courseId: id } : { courseId: id, status: utils.isActive() };
+            accessLevel == 1
+                ? { courseId: id }
+                : { courseId: id, status: utils.isActive() };
 
         const course = await Course.findById(id);
-        const videos = await Video.find(filter).sort({ status: 1, createdDate: 1 });
+        const videos = await Video.find(filter).sort({
+            status: 1,
+            createdDate: 1,
+        });
 
         if (!course)
             return res.status(404).json({
@@ -49,7 +56,9 @@ exports.addCourse = async (req, res, next) => {
         return res.status(201).json(course);
     } catch (err) {
         if (err.name === "ValidationError") {
-            const messages = Object.values(err.errors).map((val) => val.message);
+            const messages = Object.values(err.errors).map(
+                (val) => val.message
+            );
             return res.status(400).json({
                 error: messages,
             });

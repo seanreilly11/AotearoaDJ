@@ -37,7 +37,7 @@ async function getAll() {
 async function getSingle(id) {
     const requestOptions = {
         method: "GET",
-        // headers: authHeader(),
+        headers: authHeader(),
     };
 
     return fetch(`${config.env}/courses/${id}`, requestOptions).then(

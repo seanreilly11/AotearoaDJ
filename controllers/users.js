@@ -86,7 +86,7 @@ exports.logoutUser = async (req, res, next) => {
                 $set: { securityKey: "" },
             }
         );
-        return res.status(200).json(true);
+        return res.status(200).end();
     } catch (err) {
         return res.status(500).json({
             error: err.message,

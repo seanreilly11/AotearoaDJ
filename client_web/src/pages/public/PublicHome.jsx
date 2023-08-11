@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useDispatch } from "react-redux";
 import { authenticationActions } from "../../redux/actions/authentication.actions";
@@ -9,10 +9,13 @@ import Footer from "../../components/Footer";
 function PublicHome() {
     const auth = useAuth();
     const dispatch = useDispatch();
+    const signedOutRef = useRef(false);
 
     useEffect(() => {
+        if (signedOutRef.current) return;
+        signedOutRef.current = true;
         auth && dispatch(authenticationActions.signOut(auth.id));
-    }, []);
+    }, [auth]);
 
     return (
         <>

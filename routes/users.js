@@ -7,7 +7,6 @@ const {
     makeUserAdmin,
     updateUser,
     loginUser,
-    sendEmail,
     logoutUser,
     loginAdminUser,
     getUsersCompletedItems,

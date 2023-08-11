@@ -45,12 +45,12 @@ function Login() {
                         <input
                             className={
                                 "form-control" +
-                                (error.status === 404 ? " is-invalid" : "")
+                                (error?.status === 404 ? " is-invalid" : "")
                             }
                             type="email"
                             {...register("email", { required: true })}
                         />
-                        {error.status === 404 && (
+                        {error?.status === 404 && (
                             <span className="invalid-feedback">
                                 {error.message}
                             </span>
@@ -66,12 +66,12 @@ function Login() {
                         <input
                             className={
                                 "form-control" +
-                                (error.status === 401 ? " is-invalid" : "")
+                                (error?.status === 401 ? " is-invalid" : "")
                             }
                             type="password"
                             {...register("password", { required: true })}
                         />
-                        {error.status === 401 && (
+                        {error?.status === 401 && (
                             <span className="invalid-feedback">
                                 {error.message}
                             </span>

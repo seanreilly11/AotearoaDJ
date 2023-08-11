@@ -30,7 +30,7 @@ function handleResponse(response) {
 async function getAll() {
     const requestOptions = {
         method: "GET",
-        // headers: authHeader(),
+        headers: authHeader(),
     };
 
     return fetch(`${config.env}/videos`, requestOptions).then(handleResponse);
@@ -39,7 +39,7 @@ async function getAll() {
 async function getSingle(id) {
     const requestOptions = {
         method: "GET",
-        // headers: authHeader(),
+        headers: authHeader(),
     };
 
     return fetch(`${config.env}/videos/${id}`, requestOptions).then(

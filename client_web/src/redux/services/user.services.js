@@ -28,7 +28,7 @@ function handleResponse(response) {
 async function getSingle(id) {
     const requestOptions = {
         method: "GET",
-        // headers: authHeader(),
+        headers: authHeader(),
     };
 
     return fetch(`${config.env}/users/${id}`, requestOptions).then(

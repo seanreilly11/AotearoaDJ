@@ -45,7 +45,7 @@ async function signOut(userId) {
         method: "PATCH",
         headers: unauthenticatedHeader(),
         dataType: "json",
-        body: JSON.stringify(userId),
+        body: JSON.stringify({ userId }),
     };
 
     return fetch(`${config.env}/users/logout`, requestOptions).then(
