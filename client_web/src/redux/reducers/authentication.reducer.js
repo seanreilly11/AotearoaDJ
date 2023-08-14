@@ -49,6 +49,21 @@ export function authentication(state = initialState, action) {
                 id: null,
                 loading: false,
             };
+        case authenticationConstants.VERIFY_EMAIL_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            };
+        case authenticationConstants.VERIFY_EMAIL_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+            };
+        case authenticationConstants.VERIFY_EMAIL_FAILURE:
+            return {
+                ...state,
+                error: action.error,
+            };
 
         case authenticationConstants.RESTORE_TOKEN_REQUEST:
             return {

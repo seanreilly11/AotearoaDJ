@@ -12,6 +12,7 @@ import { history } from "./hooks/useHistory";
 import { auth } from "./hooks/useAuthConst";
 import Footer from "./components/Footer";
 import Register from "./pages/public/Register";
+import VerifyEmail from "./pages/public/VerifyEmail";
 
 function App() {
     const location = useLocation();
@@ -24,7 +25,12 @@ function App() {
 
     const isAuth = () => {
         const url = location.pathname;
-        return url !== "/login" && url !== "/register" && url !== "/";
+        return (
+            url !== "/login" &&
+            url !== "/register" &&
+            url !== "/" &&
+            url !== "/emailverification"
+        );
     };
 
     return (
@@ -53,6 +59,10 @@ function App() {
                     />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route
+                        path="/emailverification"
+                        element={<VerifyEmail />}
+                    />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>

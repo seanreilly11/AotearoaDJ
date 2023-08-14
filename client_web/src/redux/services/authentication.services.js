@@ -4,6 +4,7 @@ import { unauthenticatedHeader } from "../unauthenticatedHeader";
 export const authenticationService = {
     signIn,
     signOut,
+    verifyEmail,
     restoreToken,
     register,
 };
@@ -51,6 +52,19 @@ async function signOut(userId) {
     return fetch(`${config.env}/users/logout`, requestOptions).then(
         handleResponse
     );
+}
+
+async function verifyEmail(token) {
+    const requestOptions = {
+        method: "PATCH",
+        headers: unauthenticatedHeader(),
+        dataType: "json",
+    };
+
+    return fetch(
+        `${config.env}/users/email?token=${token}`,
+        requestOptions
+    ).then(handleResponse);
 }
 
 async function restoreToken() {

@@ -137,7 +137,7 @@ exports.loginAdminUser = async (req, res, next) => {
 };
 
 // @desc Send email
-// @route POST /api/v1/users/email
+// @route
 exports.sendEmail = async (req, res, next) => {
     try {
         var transporter = nodemailer.createTransport({
@@ -169,8 +169,34 @@ exports.sendEmail = async (req, res, next) => {
     }
 };
 
+// @desc Verify user email
+// @route PATCH api/v1/users/email?token=:token
+exports.verifyEmail = async (req, res, next) => {
+    try {
+        const { user_id, email } = jwt.verify(req.query.token, JWT_TOKEN);
+
+        const user = await User.findOne({ _id: user_id });
+        if (!user) return res.status(404).json({ error: "User not found" });
+        if (user.email !== email)
+            return res.status(404).json({ error: "Email doesn't match email" });
+        const updateUser = await User.updateOne(
+            {
+                _id: user_id,
+            },
+            {
+                $currentDate: {
+                    updatedDate: true,
+                },
+                $set: { verified: true },
+            }
+        );
+        return res.status(200).json(true);
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+};
+
 function defineEmailHTML(data) {
-    console.log(data);
     let html = `<div style="display: flex; justify-content: center">
         <div
             style="
@@ -194,7 +220,9 @@ function defineEmailHTML(data) {
             </p>
             <br />
             <a
-                href="http://localhost:3000/"
+                href="http://localhost:3000/emailverification?token=${generateSecurityKey(
+                    data
+                )}"
                 style="
                     background-color: #c120ca;
                     color: #fff;
@@ -345,10 +373,8 @@ function generateSecurityKey(user) {
         { user_id: user._id, email: user.email },
         JWT_TOKEN,
         {
-            expiresIn: "2h",
+            expiresIn: "24h",
         }
     );
-    console.log(token);
-
     return token;
 }

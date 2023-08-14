@@ -3,8 +3,12 @@ const jwt = require("jsonwebtoken");
 const { JWT_TOKEN } = require("../config/keys");
 
 const verifyToken = (req, res, next) => {
-    const url = req.url;
-    const notRequiredArr = ["/api/v1/users/login", "/api/v1/users/logout"];
+    const url = req._parsedUrl.pathname;
+    const notRequiredArr = [
+        "/api/v1/users/login",
+        "/api/v1/users/logout",
+        "/api/v1/users/email",
+    ];
     const notRequiredPost = ["/api/v1/users"];
     const notRequired =
         notRequiredArr.includes(url) ||

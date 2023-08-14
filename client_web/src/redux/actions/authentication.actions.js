@@ -6,6 +6,7 @@ import { history } from "../../hooks/useHistory";
 export const authenticationActions = {
     signIn,
     signOut,
+    verifyEmail,
     restoreToken,
     register,
 };
@@ -61,6 +62,32 @@ function signOut(userId) {
     }
     function failure(error) {
         return { type: authenticationConstants.SIGN_OUT_FAILURE, error };
+    }
+}
+
+function verifyEmail(token) {
+    return (dispatch) => {
+        dispatch(request());
+
+        authenticationService.verifyEmail(token).then(
+            (data) => {
+                dispatch(success(data));
+                history.navigate("/login");
+            },
+            (error) => {
+                dispatch(failure(error));
+            }
+        );
+    };
+
+    function request() {
+        return { type: authenticationConstants.VERIFY_EMAIL_REQUEST };
+    }
+    function success(data) {
+        return { type: authenticationConstants.VERIFY_EMAIL_SUCCESS, data };
+    }
+    function failure(error) {
+        return { type: authenticationConstants.VERIFY_EMAIL_FAILURE, error };
     }
 }
 

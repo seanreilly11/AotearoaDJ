@@ -6,6 +6,7 @@ const {
     registerUser,
     makeUserAdmin,
     updateUser,
+    verifyEmail,
     loginUser,
     logoutUser,
     loginAdminUser,
@@ -13,6 +14,8 @@ const {
 } = require("../controllers/users");
 
 router.route("/").get(getUsers).post(registerUser);
+
+router.route("/email").patch(verifyEmail);
 
 router.route("/login").post(loginUser);
 
