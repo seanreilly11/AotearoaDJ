@@ -7,15 +7,17 @@ $(document).ready(function () {
     $.ajax({
         url: `${environment}/videos/${videoId}`,
         type: "GET",
+        headers: authHeader,
         dataType: "json",
         success: function (data) {
             console.log(data);
             $("#edit-video__title").val(data.title);
             $("#edit-video__desc").text(data.description);
-            $(`input[name=edit-video__difficulty][value=${Math.floor(data.difficulty)}]`).prop(
-                "checked",
-                true
-            );
+            $(
+                `input[name=edit-video__difficulty][value=${Math.floor(
+                    data.difficulty
+                )}]`
+            ).prop("checked", true);
             $("#edit-video__videoLink").val(data.videoURI);
         }, //success
         error: function () {
@@ -34,10 +36,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: `${environment}/videos/${videoId}`,
-            headers: {
-                Accept: "/*/",
-                "Content-Type": "application/json",
-            },
+            headers: authHeader,
             type: "PATCH",
             dataType: "json",
             data: JSON.stringify(body),

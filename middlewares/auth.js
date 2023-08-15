@@ -6,6 +6,7 @@ const verifyToken = (req, res, next) => {
     const url = req._parsedUrl.pathname;
     const notRequiredArr = [
         "/api/v1/users/login",
+        "/api/v1/users/adminlogin",
         "/api/v1/users/logout",
         "/api/v1/users/email",
     ];

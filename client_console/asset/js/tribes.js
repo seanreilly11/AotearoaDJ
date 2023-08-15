@@ -2,7 +2,9 @@ const redirectURL = "https://www.aotearoadjacademy.com/";
 const validLoginURL = "courses.html";
 
 var urlParam = function (name) {
-    var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(window.location.href);
+    var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(
+        window.location.href
+    );
     if (results == null) {
         return null;
     }
@@ -11,7 +13,8 @@ var urlParam = function (name) {
 
 function initTokenSecurity() {
     //Check if session is set
-    if (urlParam("token") == "" || urlParam("token") == null) window.location.replace("./");
+    if (urlParam("token") == "" || urlParam("token") == null)
+        window.location.replace("./");
 
     //check localstorage
     if (!localStorage.hasOwnProperty("passport")) window.location.replace("./");
@@ -21,13 +24,15 @@ function initTokenSecurity() {
     var userPassport = JSON.parse(fetchedPassport);
 
     //verify security token vs URL
-    if (urlParam("token") != userPassport.securityKey) window.location.replace("./");
+    if (urlParam("token") != userPassport.token) window.location.replace("./");
 
     //set user information
     $("#userId").text(userPassport.firstname);
     $("#userLetter").text(userPassport.firstname.charAt(0).toUpperCase());
     $("#userLetter1").text(userPassport.firstname.charAt(0).toUpperCase());
-    $("#userFullId").text(userPassport.firstname + " " + (userPassport.lastname || ""));
+    $("#userFullId").text(
+        userPassport.firstname + " " + (userPassport.lastname || "")
+    );
 
     //Initiate Security : Menu
     $("a[href]:not(.no-token").each(function () {

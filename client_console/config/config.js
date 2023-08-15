@@ -3,6 +3,14 @@ var config = {
     env: "http://localhost:5000/api/v1",
 };
 
+const { token } = JSON.parse(localStorage.getItem("passport"));
+
+const authHeader = {
+    Accept: "*/*",
+    "Content-Type": "application/json",
+    authorization: "Bearer " + token,
+};
+
 // -- ENVIRONMENT OPTIONS --
 // develop
 // xcallapk1

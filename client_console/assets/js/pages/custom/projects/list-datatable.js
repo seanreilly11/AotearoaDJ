@@ -1,11 +1,12 @@
 "use strict";
+
 // Class definition
 
 var KTUserListDatatable = (function () {
     // variables
     var datatable;
     const environment = config.env;
-    // const passport = JSON.parse(localStorage.getItem("passport"));
+    const passport = JSON.parse(localStorage.getItem("passport"));
 
     // init
     var init = function () {
@@ -18,6 +19,9 @@ var KTUserListDatatable = (function () {
                     read: {
                         url: `${environment}/courses?accessLevel=1`,
                         method: "GET",
+                        headers: {
+                            authorization: "Bearer " + passport.token,
+                        },
                     },
                 },
                 pageSize: 10,

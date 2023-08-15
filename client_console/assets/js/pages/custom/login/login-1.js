@@ -8,7 +8,7 @@ var passport = {
     firstname: "",
     lastname: "",
     userId: "",
-    securityKey: "",
+    token: "",
 };
 
 var KTLoginV1 = (function () {
@@ -54,8 +54,8 @@ var KTLoginV1 = (function () {
                 //Use LocalStorage to store the user Identity
                 passport.firstname = data.firstname;
                 passport.lastname = data.lastname;
-                passport.userId = data.uid;
-                passport.securityKey = data.token;
+                passport.userId = data.id;
+                passport.token = data.token;
 
                 localStorage.setItem("passport", JSON.stringify(passport));
 
@@ -70,10 +70,23 @@ var KTLoginV1 = (function () {
                         "Incorrect username or password. Please try again."
                     );
                 else if (xhr.status === 403)
-                    showErrorMsg(form, "danger", "Access denied. User is not admin.");
+                    showErrorMsg(
+                        form,
+                        "danger",
+                        "Access denied. User is not admin."
+                    );
                 else if (xhr.status === 404)
-                    showErrorMsg(form, "danger", "User not found. Please try again.");
-                else showErrorMsg(form, "danger", "An error occurred. Please try again.");
+                    showErrorMsg(
+                        form,
+                        "danger",
+                        "User not found. Please try again."
+                    );
+                else
+                    showErrorMsg(
+                        form,
+                        "danger",
+                        "An error occurred. Please try again."
+                    );
             },
         });
     };

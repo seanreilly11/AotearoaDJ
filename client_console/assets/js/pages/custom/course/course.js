@@ -7,6 +7,7 @@ $(document).ready(function () {
     $.ajax({
         url: `${environment}/courses/${courseId}?accessLevel=1`,
         type: "GET",
+        headers: authHeader,
         dataType: "json",
         success: function (data) {
             console.log(data);

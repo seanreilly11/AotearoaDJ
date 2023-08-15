@@ -17,15 +17,15 @@ $(document).ready(function () {
     $.ajax({
         url: `${environment}/courses/${courseId}`,
         type: "GET",
+        headers: authHeader,
         dataType: "json",
         success: function (data) {
             console.log(data);
             $("#edit-course__title").val(data.title);
             $("#edit-course__desc").val(data.description);
-            $(`input[name=edit-course__difficulty][value=${data.difficulty}]`).prop(
-                "checked",
-                true
-            );
+            $(
+                `input[name=edit-course__difficulty][value=${data.difficulty}]`
+            ).prop("checked", true);
             $("#edit-course__category").val(data.category);
 
             printVideos(data.videos);
@@ -57,10 +57,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: `${environment}/courses/${courseId}`,
-            headers: {
-                Accept: "/*/",
-                "Content-Type": "application/json",
-            },
+            headers: authHeader,
             type: "PATCH",
             dataType: "json",
             data: JSON.stringify(body),

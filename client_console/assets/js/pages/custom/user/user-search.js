@@ -24,6 +24,9 @@ var KTUserListDatatable = (function () {
                     read: {
                         url: `${environment}/users`,
                         method: "GET",
+                        headers: {
+                            authorization: "Bearer " + passport.token,
+                        },
                     },
                 },
                 pageSize: 10,

@@ -47,14 +47,14 @@ exports.loginUser = async (req, res, next) => {
                         updatedDate: true,
                         lastLogin: true,
                     },
-                    $set: { securityKey: generateSecurityKey(user) },
+                    $set: { token: generateToken(user) },
                 }
             );
             const userWithToken = await User.findById(user._id);
             return res.status(200).json({
                 id: userWithToken._id,
                 firstname: userWithToken.firstname,
-                token: userWithToken.securityKey,
+                token: userWithToken.token,
             });
             // return res.status(200).json({ ...userWithToken._doc, password: undefined });
         } else {
@@ -84,7 +84,7 @@ exports.logoutUser = async (req, res, next) => {
                 $currentDate: {
                     updatedDate: true,
                 },
-                $set: { securityKey: "" },
+                $set: { token: "" },
             }
         );
         return res.status(200).end();
@@ -108,7 +108,7 @@ exports.loginAdminUser = async (req, res, next) => {
                     .status(403)
                     .json({ error: "Unauthorised. Not admin" });
 
-            const securityKey = generateSecurityKey(user);
+            const token = generateToken(user);
             const updateUser = await User.updateOne(
                 {
                     _id: user._id,
@@ -117,12 +117,12 @@ exports.loginAdminUser = async (req, res, next) => {
                     $currentDate: {
                         updatedDate: true,
                     },
-                    $set: { securityKey },
+                    $set: { token },
                 }
             );
             return res.status(200).json({
-                uid: user._id,
-                token: securityKey,
+                id: user._id,
+                token: token,
                 firstname: user.firstname,
             });
         } else
@@ -220,7 +220,7 @@ function defineEmailHTML(data) {
             </p>
             <br />
             <a
-                href="http://localhost:3000/emailverification?token=${generateSecurityKey(
+                href="http://localhost:3000/emailverification?token=${generateToken(
                     data
                 )}"
                 style="
@@ -362,7 +362,7 @@ exports.getUsersCompletedItems = async (req, res, next) => {
     }
 };
 
-function generateSecurityKey(user) {
+function generateToken(user) {
     // var length = isAdmin ? 8 : 16,
     //     charset =
     //         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",

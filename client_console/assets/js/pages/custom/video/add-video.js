@@ -25,10 +25,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: `${environment}/videos`,
-            headers: {
-                Accept: "/*/",
-                "Content-Type": "application/json",
-            },
+            headers: authHeader,
             type: "POST",
             dataType: "json",
             data: JSON.stringify(body),
@@ -42,7 +39,8 @@ $(document).ready(function () {
                     timer: 2500,
                 }).then(() =>
                     window.location.replace(
-                        `custom/video/overview.html?videoId=${data._id}&token=` + token
+                        `custom/video/overview.html?videoId=${data._id}&token=` +
+                            token
                     )
                 );
             }, //success
@@ -55,7 +53,9 @@ $(document).ready(function () {
                     confirmButtonColor: "#3085d6",
                     confirmButtonText: "Okay",
                     timer: 2500,
-                }).then(() => window.location.replace(`courses.html?token=` + token));
+                }).then(() =>
+                    window.location.replace(`courses.html?token=` + token)
+                );
             }, //error
         }); //ajax
     });

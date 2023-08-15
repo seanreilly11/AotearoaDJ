@@ -9,6 +9,7 @@ $(document).ready(function () {
     $.ajax({
         url: `${environment}/videos/${videoId}`,
         type: "GET",
+        headers: authHeader,
         dataType: "json",
         success: function (data) {
             console.log(data);
@@ -51,10 +52,7 @@ $(document).ready(function () {
                 const time = video.duration;
                 $.ajax({
                     url: `${environment}/videos/timelength?videoId=${videoId}&timeLength=${time}`,
-                    headers: {
-                        Accept: "/*/",
-                        "Content-Type": "application/json",
-                    },
+                    headers: authHeader,
                     type: "PATCH",
                     dataType: "json",
                     success: function (data) {
@@ -81,10 +79,7 @@ $(document).ready(function () {
             if (result.value) {
                 $.ajax({
                     url: `${environment}/videos/remove/${videoId}`,
-                    headers: {
-                        Accept: "/*/",
-                        "Content-Type": "application/json",
-                    },
+                    headers: authHeader,
                     type: "PATCH",
                     dataType: "json",
                     success: function (data) {

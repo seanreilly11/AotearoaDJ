@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    securityKey: {
+    token: {
         type: String,
         default: "",
     },
