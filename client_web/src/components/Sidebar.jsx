@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logo from "../assets/images/aotearoa_dj_logo.png";
 
 function Sidebar() {
     const username = useSelector((state) => state.authentication.name);
+    const [showUserMenu, setShowUserMenu] = useState(false);
 
     return (
         <div
@@ -42,25 +43,30 @@ function Sidebar() {
             </ul>
             <hr />
             <div>
-                {/* <ul className="nav nav-pills flex-column text-small mb-3">
-                    <li className="nav-item">
-                        <NavLink className="nav-link text-white" to="/settings">
-                            Settings
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink className="nav-link text-white" to="/profile">
-                            Profile
-                        </NavLink>
-                    </li>
-
-                    <li>
-                        <NavLink className="nav-link text-white" to="/sign">
-                            Sign out
-                        </NavLink>
-                    </li>
-                </ul> */}
-                <div className="d-flex align-items-center text-white text-decoration-none">
+                {showUserMenu && (
+                    <ul className="nav nav-pills flex-column text-small mb-3">
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link text-white"
+                                to="/settings"
+                            >
+                                Settings
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                className="nav-link text-white"
+                                to="/profile"
+                            >
+                                Profile
+                            </NavLink>
+                        </li>
+                    </ul>
+                )}
+                <div
+                    className="d-flex align-items-center text-white text-decoration-none"
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                >
                     <img
                         src="https://github.com/mdo.png"
                         alt=""
