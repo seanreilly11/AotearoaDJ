@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logo from "../assets/images/aotearoa_dj_logo.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 function Sidebar() {
     const username = useSelector((state) => state.authentication.name);
@@ -64,17 +66,23 @@ function Sidebar() {
                     </ul>
                 )}
                 <div
-                    className="d-flex align-items-center text-white text-decoration-none"
+                    className="d-flex align-items-center justify-content-between text-white text-decoration-none"
                     onClick={() => setShowUserMenu(!showUserMenu)}
                 >
-                    <img
+                    {/* <img
                         src="https://github.com/mdo.png"
                         alt=""
                         width="32"
                         height="32"
                         className="rounded-circle me-2"
-                    />
+                    /> */}
                     <strong>{username || "User"}</strong>
+                    <FontAwesomeIcon
+                        icon={faChevronUp}
+                        className={
+                            "usermenu-arrow " + (showUserMenu ? "rotate" : "")
+                        }
+                    />
                 </div>
             </div>
         </div>

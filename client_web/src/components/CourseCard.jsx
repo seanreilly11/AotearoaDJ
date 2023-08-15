@@ -10,13 +10,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function CourseCard({ course }) {
+    const courseColours = ["beginner", "intermediate", "advanced"];
     return (
         <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
             <NavLink
                 to={"/course/" + course._id}
                 className={"text-decoration-none"}
             >
-                <div className="card course-card">
+                <div
+                    className={
+                        "card course-card " +
+                        courseColours[course.difficulty - 1]
+                    }
+                >
                     {/* <img src="" alt="" /> */}
                     <div className="my-5"></div>
                     <div className="card-body">

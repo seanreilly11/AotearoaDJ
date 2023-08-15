@@ -9,9 +9,10 @@ function DetailPill({ content }) {
         Production: ["Production", "warning"],
     };
     return (
-        <div className={"badge rounded-pill text-bg-" + obj[content][1]}>
+        <span>
+            {/* <div className={"badge rounded-pill text-bg-" + obj[content][1]}> */}
             {obj[content][0]}
-        </div>
+        </span>
     );
 }
 
