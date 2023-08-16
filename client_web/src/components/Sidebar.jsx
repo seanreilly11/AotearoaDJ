@@ -4,8 +4,10 @@ import { useSelector } from "react-redux";
 import logo from "../assets/images/aotearoa_dj_logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../hooks/useAuth";
 
 function Sidebar() {
+    const user = useAuth();
     const username = useSelector((state) => state.authentication.name);
     const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -76,7 +78,7 @@ function Sidebar() {
                         height="32"
                         className="rounded-circle me-2"
                     /> */}
-                    <strong>{username || "User"}</strong>
+                    <strong>{user?.firstname || "User"}</strong>
                     <FontAwesomeIcon
                         icon={faChevronUp}
                         className={
